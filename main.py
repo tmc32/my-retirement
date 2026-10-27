@@ -33,24 +33,26 @@ def get_last_working_day():
 
 
 def get_28th_or_last_working_day():
-    # Get today's date
-    today = datetime.date.today()
+    now = datetime.datetime.now()
+    today = now.date()
 
-    # Find the 28th of the current month
-    # We use today.year and today.month to ensure it stays in the current cycle
-    target_date = datetime.date(today.year, today.month, 28)
+    def target_for(year, month):
+        uk_holidays = holidays.UnitedKingdom(subdiv="ENG", years=[year])
+        target_date = datetime.date(year, month, 28)
+        # Roll back if it's a weekend (5=Sat, 6=Sun) or a Bank Holiday
+        while target_date.weekday() >= 5 or target_date in uk_holidays:
+            target_date -= datetime.timedelta(days=1)
+        return datetime.datetime.combine(target_date, datetime.time(0, 0, 0))
 
-    # Load UK Bank Holidays (England/Wales)
-    # Note: It's good practice to include the next year just in case of overflows,
-    # though for the 28th it's rarely needed.
-    uk_holidays = holidays.UnitedKingdom(subdiv="ENG", years=[today.year])
+    target = target_for(today.year, today.month)
 
-    # Roll back if it's a weekend (5=Sat, 6=Sun) or a Bank Holiday
-    while target_date.weekday() >= 5 or target_date in uk_holidays:
-        target_date -= datetime.timedelta(days=1)
+    # Once this month's target (the 28th, or the working day before it) has
+    # been reached, count down to next month's instead
+    if now >= target:
+        year, month = (today.year + 1, 1) if today.month == 12 else (today.year, today.month + 1)
+        target = target_for(year, month)
 
-    # Return as a full datetime object at midnight
-    return datetime.datetime.combine(target_date, datetime.time(0, 0, 0))
+    return target
 
 
 def run_countdown():
@@ -135,7 +137,7 @@ def calculate_retirement_no_dependencies():
     print(f"Seconds: {seconds:,.0f}")
     print("")
 
-    print(f"Morgate Countdown (Standard Lib Version):")
+    print(f"Mortgage Countdown (Standard Lib Version):")
     print(f"{'-' * 40}")
     print(f"Years:   {myears:.2f}")
     print(f"Months:  {mmonths:.1f}")
@@ -163,6 +165,8 @@ def run_loop():
                 return
             time.sleep(0.1)
             elapsed += 0.1
+
+
 if __name__ == "__main__":
     try:
         run_loop()
