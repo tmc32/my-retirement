@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg">
+<title>Retirement Countdown</title>
+<style>
+  body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+         align-items: center; background: #111827; color: #f9fafb; font-family: system-ui, sans-serif; }
+  h1 { font-size: 1.1rem; font-weight: 500; margin: 0; color: #9ca3af; }
+  #date { margin: .25rem 0 1.5rem; }
+  #big { font-size: 2.6rem; font-weight: 700; margin-bottom: 1.5rem; }
+  table { border-collapse: collapse; }
+  td { padding: .3rem 1rem; }
+  td:first-child { color: #9ca3af; }
+  td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<h1 id="title"></h1>
+<div id="date"></div>
+<div id="big"></div>
+<table id="units"></table>
+<script src="holidays.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
