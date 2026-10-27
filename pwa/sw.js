@@ -1,4 +1,4 @@
-const CACHE = "countdown-v1";
+const CACHE = "countdown-v2";
 const FILES = ["./", "index.html", "app.js", "holidays.js", "manifest.json", "icon.svg"];
 
 self.addEventListener("install", (e) => e.waitUntil(caches.open(CACHE).then((c) => c.addAll(FILES))));

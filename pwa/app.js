@@ -18,8 +18,30 @@ function getTarget(now) {
 
 const fmt = (n, dp = 0) => n.toLocaleString("en-GB", { minimumFractionDigits: dp, maximumFractionDigits: dp });
 
+// Mirrors main.py: whole days drive years/months/weeks, seconds drive hours/minutes
+function longCountdown(id, title, target, now) {
+  const secs = (target - now) / 1000;
+  const days = Math.floor(secs / 86400);
+  const rows = [
+    ["Years", fmt(days / 365.25, 2)],
+    ["Months", fmt(days / 30.44, 1)],
+    ["Weeks", fmt(days / 7, 1)],
+    ["Days", fmt(days)],
+    ["Hours", fmt(secs / 3600)],
+    ["Minutes", fmt(secs / 60)],
+    ["Seconds", fmt(secs)],
+  ];
+  document.getElementById(id).innerHTML =
+    `<h2>${title}</h2><table>` + rows.map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join("") + "</table>";
+}
+
+const RETIREMENT = new Date(2039, 11, 7);
+const MORTGAGE = new Date(2032, 9, 1);
+
 function render() {
   const now = new Date();
+  longCountdown("retirement", "Retirement Countdown", RETIREMENT, now);
+  longCountdown("mortgage", "Mortgage Countdown", MORTGAGE, now);
   const target = getTarget(now);
   const secs = (target - now) / 1000;
 
